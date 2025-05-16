@@ -1,0 +1,28 @@
+services:
+  react-app:
+    build:
+      context: ../bot-ea-fe
+      dockerfile: Dockerfile
+    ports:
+      - "0.0.0.0:8085:8085"  # Explicitly bind to all network interfaces
+    environment:
+      - NODE_ENV=production
+    networks:
+      - bot-network
+    restart: unless-stopped  # Added for reliability
+
+  spring-boot-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "0.0.0.0:8080:8080"  # Explicitly bind to all network interfaces
+    volumes:
+      - /opt/bin/application.yaml:/opt/bin/application.yaml
+    networks:
+      - bot-network
+    restart: unless-stopped  # Added for reliability
+
+networks:
+  bot-network:
+    driver: bridge
